@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/Navbar";
+import { Layout } from "@/components/Layout";
 import { ProductCard } from "@/components/ProductCard";
 import { useProducts } from "@/hooks/use-products";
 import { Loader2, Search } from "lucide-react";
@@ -8,29 +8,27 @@ export default function Shop() {
   const { data: products, isLoading } = useProducts();
   const [search, setSearch] = useState("");
 
-  const filteredProducts = products?.filter(p => 
+  const filteredProducts = products?.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase())
   ) || [];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <main className="max-w-7xl mx-auto px-4 py-12">
+    <Layout>
+      <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
           <div>
             <h1 className="text-4xl font-display font-bold">Shop Collection</h1>
             <p className="text-muted-foreground mt-2">Discover our latest arrivals</p>
           </div>
-          
-          <div className="relative w-full md:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+
+          <div className="relative w-full md:w-96">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40" />
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="Search vintage pieces..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-card focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all"
+              className="w-full pl-12 pr-6 py-4 rounded-2xl border-none glass-card focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-muted-foreground/50 font-medium"
             />
           </div>
         </div>
@@ -50,7 +48,7 @@ export default function Shop() {
             <p className="text-lg">No products found.</p>
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </Layout>
   );
 }

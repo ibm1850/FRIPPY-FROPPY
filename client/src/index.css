@@ -6,48 +6,60 @@
 
 :root {
   --font-sans: 'Inter', sans-serif;
-  --font-display: 'Poppins', sans-serif;
+  --font-display: 'Outfit', sans-serif;
 
-  /* Vintage Modern Palette: Beige, Black, White */
-  --background: 40 33% 98%;      /* #FAF8F4 - Warm off-white */
-  --foreground: 0 0% 10%;        /* #1A1A1A - Soft black */
+  /* Logo-Inspired Palette */
+  --background: 210 20% 98%;
+  /* Very light blue-grey */
+  --foreground: 222 47% 11%;
+  /* Dark blue-black */
 
-  --card: 0 0% 100%;             /* White cards */
-  --card-foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 10%;
+  --popover-foreground: 222 47% 11%;
 
-  --primary: 0 0% 10%;           /* Black primary actions */
-  --primary-foreground: 0 0% 98%;
+  --primary: 200 95% 45%;
+  /* Sky Blue from logo */
+  --primary-foreground: 210 40% 98%;
 
-  --secondary: 40 20% 92%;       /* Light beige secondary */
-  --secondary-foreground: 0 0% 10%;
+  --secondary: 340 70% 90%;
+  /* Soft Pink from logo */
+  --secondary-foreground: 340 50% 20%;
 
-  --muted: 40 10% 94%;
-  --muted-foreground: 0 0% 45%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
 
-  --accent: 35 40% 85%;          /* Warmer beige accent */
-  --accent-foreground: 0 0% 10%;
+  --accent: 222 47% 20%;
+  /* Deep Blue from logo */
+  --accent-foreground: 210 40% 98%;
 
   --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 98%;
+  --destructive-foreground: 210 40% 98%;
 
-  --border: 40 10% 90%;
-  --input: 40 10% 90%;
-  --ring: 0 0% 10%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 222 47% 11%;
 
-  --radius: 1rem;
+  --radius: 1.5rem;
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground antialiased font-sans selection:bg-primary/20;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-display font-medium tracking-tight;
   }
 }
@@ -57,17 +69,20 @@
   .text-balance {
     text-wrap: balance;
   }
-  
-  .glass-panel {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
   }
 
-  .vintage-shadow {
-    box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.05);
+  .modern-shadow {
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
   }
-  
-  .vintage-shadow-hover:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px 0px rgba(0,0,0,0.08);
+
+  .hover-glow:hover {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    transform: translateY(-2px);
   }
 }

@@ -1,0 +1,17 @@
+{
+    "name": "frippy-froppy",
+    "version": "1.0.0",
+    "description": "Frippy Froppy E-commerce Platform",
+    "main": "dist/index.js",
+    "type": "module",
+    "scripts": {
+        "dev": "tsx server/index.ts",
+        "build": "tsx script/build.ts",
+        "start": "node dist/index.js",
+        "db:generate": "drizzle-kit generate",
+        "db:migrate": "drizzle-kit migrate"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

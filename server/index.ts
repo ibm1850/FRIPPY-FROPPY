@@ -59,7 +59,11 @@ app.use((req, res, next) => {
   next();
 });
 
+import { migrate } from "drizzle-orm/pglite/migrator";
+import { db } from "./db";
+
 (async () => {
+  await migrate(db, { migrationsFolder: "migrations" });
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -88,8 +92,6 @@ app.use((req, res, next) => {
   httpServer.listen(
     {
       port,
-      host: "0.0.0.0",
-      reusePort: true,
     },
     () => {
       log(`serving on port ${port}`);

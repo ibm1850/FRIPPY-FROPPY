@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, real } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, real, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -30,7 +30,7 @@ export const orderItems = pgTable("order_items", {
   productId: integer("product_id").notNull(),
   quantity: integer("quantity").notNull(),
   // Snapshotting price at time of order is good practice
-  priceAtPurchase: real("price_at_purchase").notNull(), 
+  priceAtPurchase: real("price_at_purchase").notNull(),
 });
 
 export const users = pgTable("users", {
