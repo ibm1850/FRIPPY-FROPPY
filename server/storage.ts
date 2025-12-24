@@ -31,6 +31,10 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: typeof users.$inferInsert): Promise<User>;
   getUser(id: number): Promise<User | undefined>;
+
+  // Admin helpers
+  clearOrders(): Promise<void>;
+  clearProducts(): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -161,6 +165,16 @@ ${orderData.items.map(item => `- Product ID: ${item.productId}, Quantity: ${item
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
+  }
+
+  async clearOrders(): Promise<void> {
+    await db.delete(orderItems);
+    await db.delete(orders);
+  }
+
+  async clearProducts(): Promise<void> {
+    await db.delete(orderItems); // Dependencies
+    await db.delete(products);
   }
 }
 

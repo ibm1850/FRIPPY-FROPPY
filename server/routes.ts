@@ -142,6 +142,18 @@ ${itemsList}
     }
   });
 
+  app.delete("/api/admin/orders", authenticateToken, async (req, res) => {
+    try {
+      console.log("Admin requested order reset");
+      await storage.clearOrders();
+      console.log("All orders cleared successfully");
+      res.status(204).send();
+    } catch (err) {
+      console.error("Failed to clear orders:", err);
+      res.status(500).json({ message: "Failed to clear orders" });
+    }
+  });
+
   // Seed Data
   await seedDatabase();
 

@@ -85,6 +85,28 @@ export default function Dashboard() {
               Download Orders Log
             </button>
             <button
+              onClick={async () => {
+                if (window.confirm("Are you sure you want to clear all orders? This cannot be undone.")) {
+                  try {
+                    const token = localStorage.getItem("admin_token");
+                    const response = await fetch("/api/admin/orders", {
+                      method: 'DELETE',
+                      headers: {
+                        'Authorization': `Bearer ${token}`
+                      }
+                    });
+                    if (!response.ok) throw new Error("Failed to clear orders");
+                    window.location.reload();
+                  } catch (err) {
+                    alert("Failed to clear orders. Please try again.");
+                  }
+                }
+              }}
+              className="text-sm font-medium text-destructive hover:underline border border-destructive/20 px-3 py-1 rounded-md bg-destructive/5"
+            >
+              Reset Orders
+            </button>
+            <button
               onClick={() => {
                 localStorage.removeItem("admin_token");
                 setLocation("/");
