@@ -84,10 +84,13 @@ export async function registerRoutes(
   // Order Routes
   app.post(api.orders.create.path, async (req, res) => {
     try {
+      console.log("Incoming order request:", req.body);
       const input = api.orders.create.input.parse(req.body);
       const order = await storage.createOrder(input);
+      console.log("Order processed successfully:", order.id);
       res.status(201).json(order);
     } catch (err) {
+      console.error("Order creation failed:", err);
       if (err instanceof Error) {
         res.status(400).json({ message: err.message });
       } else {

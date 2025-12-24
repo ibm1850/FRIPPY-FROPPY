@@ -13,10 +13,18 @@ export function useOrders() {
       const res = await fetch(api.orders.list.path, {
         headers: { "Authorization": token ? `Bearer ${token}` : "" },
       });
+
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem('admin_token');
+        window.location.href = "/admin";
+        throw new Error("Session expired. Please log in again.");
+      }
+
       if (!res.ok) throw new Error("Failed to fetch orders");
       return api.orders.list.responses[200].parse(await res.json());
     },
     enabled: !!localStorage.getItem('admin_token'),
+    refetchInterval: 30000, // Poll every 30 seconds
   });
 }
 
@@ -24,6 +32,7 @@ export function useCreateOrder() {
   const { toast } = useToast();
   const { clearCart } = useCart();
   const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: CreateOrder) => {
@@ -41,14 +50,15 @@ export function useCreateOrder() {
     },
     onSuccess: () => {
       clearCart();
+      queryClient.invalidateQueries({ queryKey: [api.orders.list.path] });
       toast({ title: "Order placed successfully!" });
       setLocation("/");
     },
     onError: (err) => {
-      toast({ 
-        title: "Order failed", 
-        description: err.message, 
-        variant: "destructive" 
+      toast({
+        title: "Order failed",
+        description: err.message,
+        variant: "destructive"
       });
     },
   });
