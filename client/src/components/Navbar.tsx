@@ -20,7 +20,7 @@ export function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <img src={logoUrl} alt="Frippy Froppy" className="h-16 w-auto" />
+            <img src="/logo-new.png" alt="Frippy Froppy" className="h-16 w-auto" />
           </Link>
 
           {/* Desktop Nav */}
