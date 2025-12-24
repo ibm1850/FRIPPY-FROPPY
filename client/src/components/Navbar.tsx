@@ -18,9 +18,9 @@ export function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="font-display text-2xl font-bold tracking-tight text-foreground hover-elevate transition-all">
-            FRIPPY FROPPY<span className="text-accent-foreground text-3xl leading-none">.</span>
+            FRIPPY FROPPY<span className="text-accent-foreground text-3xl leading-none">!</span>
           </Link>
-          {/* Version: 1.0.1 */}
+          {/* Version: 1.0.2 */}
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-8">
