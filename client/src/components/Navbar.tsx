@@ -4,8 +4,6 @@ import { useCart } from "@/hooks/use-cart";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import logoUrl from '@assets/generated_images/minimalist_vintage_fashion_logo_circle.png'
-
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const items = useCart((state) => state.items);
