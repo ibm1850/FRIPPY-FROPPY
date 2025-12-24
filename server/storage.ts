@@ -12,6 +12,8 @@ import {
   type OrderItem
 } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
+import fs from "fs";
+import path from "path";
 
 export interface IStorage {
   // Products
@@ -68,7 +70,7 @@ export class DatabaseStorage implements IStorage {
     for (const item of orderData.items) {
       const product = await this.getProduct(item.productId);
       if (!product) throw new Error(`Product ${item.productId} not found`);
-      
+
       calculatedTotal += product.price * item.quantity;
       itemsToInsert.push({
         orderId: 0, // Placeholder
@@ -97,9 +99,30 @@ export class DatabaseStorage implements IStorage {
     for (const item of itemsToInsert) {
       item.orderId = newOrder.id;
     }
-    
+
     if (itemsToInsert.length > 0) {
       await db.insert(orderItems).values(itemsToInsert);
+    }
+
+    // Log to text file
+    try {
+      const orderLogPath = path.join(process.cwd(), "orders.txt");
+      const timestamp = new Date().toISOString();
+      const orderSummary = `
+=========================================
+ORDER DATE: ${timestamp}
+ORDER ID: ${newOrder.id}
+CLIENT: ${newOrder.clientName} ${newOrder.clientSurname}
+PHONE: ${newOrder.phone}
+ADDRESS: ${newOrder.address}, ${newOrder.postalCode}, ${newOrder.city}
+TOTAL PRICE: ${newOrder.totalPrice} TND
+ITEMS:
+${orderData.items.map(item => `- Product ID: ${item.productId}, Quantity: ${item.quantity}`).join("\n")}
+=========================================
+`;
+      fs.appendFileSync(orderLogPath, orderSummary);
+    } catch (err) {
+      console.error("Failed to log order to file:", err);
     }
 
     return newOrder;
@@ -128,7 +151,7 @@ export class DatabaseStorage implements IStorage {
     const [newUser] = await db.insert(users).values(user).returning();
     return newUser;
   }
-  
+
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
