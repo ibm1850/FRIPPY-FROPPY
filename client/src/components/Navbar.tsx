@@ -4,6 +4,8 @@ import { useCart } from "@/hooks/use-cart";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import logoUrl from '@assets/generated_images/minimalist_vintage_fashion_logo_circle.png'
+
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const items = useCart((state) => state.items);
@@ -18,7 +20,7 @@ export function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <img src="/logo.png" alt="Frippy Froppy" className="h-16 w-auto" />
+            <img src={logoUrl} alt="Frippy Froppy" className="h-16 w-auto" />
           </Link>
 
           {/* Desktop Nav */}
