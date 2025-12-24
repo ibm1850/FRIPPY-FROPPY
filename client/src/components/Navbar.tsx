@@ -19,8 +19,8 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <img src="/logo-new.png" alt="Frippy Froppy" className="h-16 w-auto" />
+          <Link href="/" className="font-display text-2xl font-bold tracking-tight text-foreground hover-elevate transition-all">
+            FRIPPY FROPPY<span className="text-accent-foreground text-3xl leading-none">.</span>
           </Link>
 
           {/* Desktop Nav */}
