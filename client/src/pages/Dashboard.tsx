@@ -18,7 +18,7 @@ const formSchema = insertProductSchema.extend({
 
 export default function Dashboard() {
   const [, setLocation] = useLocation();
-  
+
   // Auth Check
   if (!localStorage.getItem("admin_token")) {
     setLocation("/admin");
@@ -51,19 +51,49 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background pb-20">
       <Navbar />
-      
+
       <main className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-display font-bold">Dashboard</h1>
-          <button 
-            onClick={() => {
-              localStorage.removeItem("admin_token");
-              setLocation("/");
-            }}
-            className="text-sm font-medium text-destructive hover:underline"
-          >
-            Sign Out
-          </button>
+          <div className="flex items-center gap-6">
+            <button
+              onClick={async () => {
+                try {
+                  const token = localStorage.getItem("admin_token");
+                  const response = await fetch("/api/admin/orders-log", {
+                    headers: {
+                      'Authorization': `Bearer ${token}`
+                    }
+                  });
+                  if (!response.ok) throw new Error("Failed to download log");
+
+                  const blob = await response.blob();
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'orders.txt';
+                  document.body.appendChild(a);
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+                  document.body.removeChild(a);
+                } catch (err) {
+                  alert("Failed to download orders log. Please make sure at least one order has been placed.");
+                }
+              }}
+              className="text-sm font-medium text-primary hover:underline border border-primary/20 px-3 py-1 rounded-md bg-primary/5"
+            >
+              Download Orders Log
+            </button>
+            <button
+              onClick={() => {
+                localStorage.removeItem("admin_token");
+                setLocation("/");
+              }}
+              className="text-sm font-medium text-destructive hover:underline"
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
 
         {/* Stats */}
@@ -79,7 +109,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-blue-500/10 rounded-xl">
@@ -91,7 +121,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-card p-6 rounded-2xl border border-border shadow-sm">
             <div className="flex items-center gap-4">
               <div className="p-3 bg-purple-500/10 rounded-xl">
@@ -117,20 +147,20 @@ export default function Dashboard() {
               <h2 className="text-xl font-bold mb-4">Add New Product</h2>
               <form onSubmit={form.handleSubmit(onSubmit)} className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  <input 
+                  <input
                     {...form.register("name")}
                     placeholder="Product Name"
                     className="w-full px-4 py-2 rounded-lg border border-border bg-background"
                   />
                   <div className="grid grid-cols-2 gap-4">
-                    <input 
+                    <input
                       {...form.register("price")}
                       type="number"
                       step="0.01"
                       placeholder="Price"
                       className="w-full px-4 py-2 rounded-lg border border-border bg-background"
                     />
-                    <input 
+                    <input
                       {...form.register("image")}
                       placeholder="Image URL"
                       className="w-full px-4 py-2 rounded-lg border border-border bg-background"
@@ -138,13 +168,13 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <textarea 
+                  <textarea
                     {...form.register("description")}
                     placeholder="Description"
                     className="w-full h-[88px] px-4 py-2 rounded-lg border border-border bg-background resize-none"
                   />
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     disabled={createProduct.isPending}
                     className="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium hover:bg-primary/90 flex items-center justify-center gap-2"
                   >
@@ -178,7 +208,7 @@ export default function Dashboard() {
                         <td className="p-4 font-medium">{product.name}</td>
                         <td className="p-4">{product.price.toFixed(2)} TND</td>
                         <td className="p-4">
-                          <button 
+                          <button
                             onClick={() => deleteProduct.mutate(product.id)}
                             disabled={deleteProduct.isPending}
                             className="text-destructive hover:bg-destructive/10 p-2 rounded-md transition-colors"
@@ -208,9 +238,8 @@ export default function Dashboard() {
                           {new Date(order.createdAt!).toLocaleDateString()}
                         </p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider ${
-                        order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'
-                      }`}>
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wider ${order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'
+                        }`}>
                         {order.status}
                       </span>
                     </div>
@@ -224,7 +253,7 @@ export default function Dashboard() {
                           {order.address}, {order.postalCode} {order.city}
                         </p>
                       </div>
-                      
+
                       <div>
                         <p className="font-semibold mb-2">Order Items</p>
                         <ul className="space-y-1 text-muted-foreground">

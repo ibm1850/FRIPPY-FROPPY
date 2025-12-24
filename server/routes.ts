@@ -48,9 +48,9 @@ export async function registerRoutes(
     // Let's assume cleartext for the very first seed for simplicity 
     // or use a simple hash function if we want to be fancy.
     // For this demo: direct comparison or mock hash.
-    
-    if (!user || user.password !== password) { 
-       return res.status(401).json({ message: "Invalid credentials" });
+
+    if (!user || user.password !== password) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const token = generateToken(user.id);
@@ -99,6 +99,27 @@ export async function registerRoutes(
   app.get(api.orders.list.path, authenticateToken, async (req, res) => {
     const orders = await storage.getOrders();
     res.json(orders);
+  });
+
+  app.get("/api/admin/orders-log", authenticateToken, async (req, res) => {
+    try {
+      const path = await import("path");
+      const fs = await import("fs");
+      const logPath = path.default.join(process.cwd(), "orders.txt");
+
+      if (!fs.default.existsSync(logPath)) {
+        return res.status(404).json({ message: "Orders log file not found" });
+      }
+
+      res.setHeader("Content-Type", "text/plain");
+      res.setHeader("Content-Disposition", "attachment; filename=orders.txt");
+
+      const fileStream = fs.default.createReadStream(logPath);
+      fileStream.pipe(res);
+    } catch (err) {
+      console.error("Error reading orders log:", err);
+      res.status(500).json({ message: "Failed to download orders log" });
+    }
   });
 
   // Seed Data
