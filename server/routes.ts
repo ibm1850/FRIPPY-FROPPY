@@ -103,22 +103,39 @@ export async function registerRoutes(
 
   app.get("/api/admin/orders-log", authenticateToken, async (req, res) => {
     try {
-      const path = await import("path");
-      const fs = await import("fs");
-      const logPath = path.default.join(process.cwd(), "orders.txt");
+      const allOrders = await storage.getOrders();
 
-      if (!fs.default.existsSync(logPath)) {
-        return res.status(404).json({ message: "Orders log file not found" });
+      let logContent = "";
+      for (const order of allOrders) {
+        const timestamp = order.createdAt ? new Date(order.createdAt).toISOString() : "N/A";
+        const itemsList = order.items.map(item =>
+          `- ${item.product.name} (ID: ${item.productId}), Quantity: ${item.quantity}, Price: ${item.priceAtPurchase} TND`
+        ).join("\n");
+
+        logContent += `
+=========================================
+ORDER DATE: ${timestamp}
+ORDER ID: ${order.id}
+CLIENT: ${order.clientName} ${order.clientSurname}
+PHONE: ${order.phone}
+ADDRESS: ${order.address}, ${order.postalCode}, ${order.city}
+TOTAL PRICE: ${order.totalPrice} TND
+ITEMS:
+${itemsList}
+=========================================
+`;
+      }
+
+      if (!logContent) {
+        logContent = "No orders found in the database.";
       }
 
       res.setHeader("Content-Type", "text/plain");
       res.setHeader("Content-Disposition", "attachment; filename=orders.txt");
-
-      const fileStream = fs.default.createReadStream(logPath);
-      fileStream.pipe(res);
+      res.send(logContent);
     } catch (err) {
-      console.error("Error reading orders log:", err);
-      res.status(500).json({ message: "Failed to download orders log" });
+      console.error("Error generating orders log:", err);
+      res.status(500).json({ message: "Failed to generate orders log" });
     }
   });
 

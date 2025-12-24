@@ -84,6 +84,7 @@ export class DatabaseStorage implements IStorage {
     const finalTotal = calculatedTotal + deliveryFee;
 
     // Create order
+    console.log("Inserting order into database...");
     const [newOrder] = await db.insert(orders).values({
       clientName: orderData.clientName,
       clientSurname: orderData.clientSurname,
@@ -95,18 +96,22 @@ export class DatabaseStorage implements IStorage {
       status: "pending",
     }).returning();
 
+    console.log("Order created with ID:", newOrder.id);
+
     // Insert items
     for (const item of itemsToInsert) {
       item.orderId = newOrder.id;
     }
 
     if (itemsToInsert.length > 0) {
+      console.log(`Inserting ${itemsToInsert.length} items for order ${newOrder.id}...`);
       await db.insert(orderItems).values(itemsToInsert);
     }
 
     // Log to text file
     try {
       const orderLogPath = path.join(process.cwd(), "orders.txt");
+      console.log("Logging order to file:", orderLogPath);
       const timestamp = new Date().toISOString();
       const orderSummary = `
 =========================================
@@ -121,6 +126,7 @@ ${orderData.items.map(item => `- Product ID: ${item.productId}, Quantity: ${item
 =========================================
 `;
       fs.appendFileSync(orderLogPath, orderSummary);
+      console.log("Order successfully written to orders.txt");
     } catch (err) {
       console.error("Failed to log order to file:", err);
     }
