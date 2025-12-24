@@ -21,11 +21,10 @@ export default function Home() {
             className="space-y-6"
           >
             <h1 className="font-display text-6xl md:text-8xl font-bold leading-[1.05] tracking-tight">
-              Discover high-quality<br />
-              <span className="text-primary italic">preloved</span> clothing
+              Frippe online ✨
             </h1>
             <p className="text-xl text-muted-foreground max-w-md leading-relaxed font-light">
-              that looks and feels brand new. Sustainable fashion, better prices, zero compromise on style.
+              Ikhtar kat3tek w el commande tousselk win ma enti. Style mzyen, état kayenha jdida، w aswem m3a9oula.
             </p>
             <div className="pt-6">
               <Link href="/shop" className="inline-flex items-center gap-3 bg-primary text-primary-foreground px-10 py-5 rounded-full font-bold text-lg hover:bg-primary/90 hover:gap-6 transition-all duration-500 shadow-xl shadow-primary/20">
